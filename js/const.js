@@ -1,5 +1,5 @@
 export const MINECRAFT_SERVER_API_ENDPOINT =
-    "https://u7bc2lxay4.execute-api.us-east-1.amazonaws.com/test";
+    "https://u7bc2lxay4.execute-api.us-east-1.amazonaws.com/prod";
 
 export const WEATHER_API_ENDPOINT = "https://api.open-meteo.com/v1/forecast";
 
