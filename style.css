@@ -1,0 +1,187 @@
+body {
+    font:
+        normal 400 2rem "Roboto",
+        sans-serif;
+    background-color: #282c34;
+    margin-top: 5rem;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 3rem;
+    line-height: 5rem;
+    color: #f8f9fa;
+}
+
+p {
+    color: #768299;
+    margin-top: 0px;
+}
+
+code {
+    color: #768299;
+}
+
+input {
+    background-color: #768299;
+    border: 1px #606a80 solid;
+    font-size: 1.25rem;
+    padding: 0.75rem 0;
+    border-radius: 5px;
+    text-align: center;
+}
+
+input:focus {
+    outline: 2px #99a9cc solid;
+}
+
+button {
+    border-width: 0px;
+    background-color: #37a6b8;
+    color: #282c34;
+    text-decoration: none;
+    padding: 0.7rem 0;
+    border-radius: 5px;
+    font:
+        1.25rem Futura,
+        "Century Gothic";
+    margin: 1.2rem 0;
+}
+
+button:hover {
+    background-color: #2e8b99;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #768299;
+    color: #a4adbd;
+}
+
+dialog::backdrop {
+    background-color: rgba(0 0 0 / 50%);
+}
+
+dialog:open {
+    top: calc(-90vh + 5rem);
+    width: min(30rem, 70vw);
+    background-color: #59b95e;
+    border: none;
+    border-radius: 10px;
+    padding: 0;
+}
+
+dialog:open button {
+    position: absolute;
+    top: 0px;
+    right: 25px;
+    background-color: transparent;
+    color: #ebeef3;
+    width: 1rem;
+    margin: 0;
+    padding: 10px;
+}
+
+dialog:open button:focus {
+    outline: none;
+}
+
+dialog:open p {
+    margin: 1rem auto;
+    padding: 1rem 0;
+    width: calc(100% - 100px);
+    text-align: center;
+    background-color: transparent;
+    color: #ebeef3;
+    font-size: 1.5rem;
+    line-break: loose;
+}
+
+.weather {
+    color: #768299;
+    font-size: 1.5rem;
+}
+
+.weather-detail {
+    display: inline-block;
+}
+
+#content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.server-status {
+    height: 2rem;
+}
+
+#status {
+    white-space: nowrap;
+    color: #f8f9fa;
+}
+
+.ip-address p {
+    font-size: 1.5rem;
+}
+
+.ip-address-copy {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 2rem 0;
+}
+
+#copy {
+    width: 6.25rem;
+    margin: 0;
+}
+
+#button-area {
+    width: 100%;
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 480px) {
+    #start,
+    #stop {
+        width: 80%;
+    }
+}
+
+@media (min-width: 481px) {
+    #start,
+    #stop {
+        width: 18rem;
+    }
+
+    .break {
+        display: none;
+    }
+
+    .weather-detail:last-of-type {
+        padding-left: 4rem;
+    }
+}
+
+#start,
+#stop {
+    display: inline-block;
+    background-color: #37a6b8;
+    color: #282c34;
+    text-decoration: none;
+    padding: 0.75rem 0;
+    border-radius: 5px;
+    font-size: 1.5rem;
+}
+
+#start:hover,
+#stop:hover {
+    background-color: #2e8b99;
+    cursor: pointer;
+}

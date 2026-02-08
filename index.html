@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+            rel="stylesheet"
+        />
+        <title>Minecraft Server</title>
+        <script src="./js/main.js" type="module"></script>
+        <link rel="stylesheet" href="./style.css" />
+    </head>
+    <body>
+        <div class="weather">
+            <div class="weather-detail">
+                Adachi, Tokyo: <span id="adachi">- / -℃</span>
+            </div>
+            <br class="break" />
+            <div class="weather-detail">
+                Kofu, Yamanashi: <span id="kofu">- / -℃</span>
+            </div>
+        </div>
+        <h1>Minecraft Server</h1>
+        <div id="error" style="display: none">
+            <p>An error occurred for the following reason:</p>
+            <code>
+                [<span id="status-code"></span>]
+                <span id="error-message"></span>
+            </code>
+            <br /><br />
+            <p>Inform the administrator of the message above.</p>
+        </div>
+        <div id="content">
+            <p class="server-status">
+                Server Status: <span id="status"> &#x26aa; Loading...</span>
+            </p>
+            <div class="ip-address">
+                <p>
+                    Be careful that the IP address changes every time you turn
+                    on/off the server.
+                </p>
+                <div class="ip-address-copy">
+                    <input id="ip-address" value="-" readonly />
+                    <button id="copy">Copy</button>
+                </div>
+            </div>
+            <div id="button-area">
+                <button id="start" style="display: none">
+                    Start the Server
+                </button>
+                <button id="stop" style="display: none">Stop the Server</button>
+            </div>
+            <p id="loading" style="display: none">Loading...</p>
+        </div>
+        <dialog id="dialog">
+            <div id="dialog-content">
+                <button id="close">×</button>
+                <p id="success-message">
+                    Be careful that the IP address changes every time you turn
+                    on/off the server.
+                </p>
+            </div>
+        </dialog>
+    </body>
+</html>
