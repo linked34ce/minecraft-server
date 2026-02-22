@@ -35,6 +35,10 @@ input:focus {
     outline: 2px #99a9cc solid;
 }
 
+input:disabled {
+    pointer-events: none;
+}
+
 button {
     border-width: 0px;
     background-color: #37a6b8;

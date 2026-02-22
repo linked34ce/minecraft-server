@@ -23,11 +23,13 @@ export const showStatus = async () => {
             statusArea.innerHTML = "&#x1F7E2; Running";
             buttonIdToDisplay = "stop";
             ipAddressInput.value = serverStatus.ipAddress;
+            ipAddressInput.disabled = false;
             copyButton.disabled = false;
         } else {
             statusArea.innerHTML = "&#x1F534; Stopped";
             buttonIdToDisplay = "start";
             ipAddressInput.value = "-";
+            ipAddressInput.disabled = true;
             copyButton.disabled = true;
         }
 
