@@ -37,6 +37,8 @@ export const showStatus = async () => {
         document.getElementById(buttonIdToDisplay).style.display = "block";
         document.getElementById(buttonIdToHide).style.display = "none";
 
+        document.getElementById("loading").style.display = "none";
+
         document.getElementById("copy").addEventListener("click", () => {
             navigator.clipboard.writeText(serverStatus.ipAddress).then(() => {
                 document.getElementById("copy").innerText = "Copied!!";

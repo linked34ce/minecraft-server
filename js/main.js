@@ -3,6 +3,10 @@ import { startServer, stopServer } from "./minecraftServerApi.js";
 import { showError, showStatus, closeModal } from "./server.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
+    const loading = document.getElementById("loading");
+    const successMessage = document.getElementById("success-message");
+
+    loading.style.display = "block";
     await showStatus();
 
     const dialog = document.getElementById("dialog");
@@ -19,7 +23,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("start").addEventListener("click", async () => {
         document.getElementById("start").style.display = "none";
-        document.getElementById("loading").style.display = "block";
+        loading.style.display = "block";
 
         const response = await startServer();
 
@@ -28,10 +32,8 @@ window.addEventListener("DOMContentLoaded", async () => {
         } else {
             setTimeout(async () => {
                 await showStatus();
-                document.getElementById("loading").style.display = "none";
             }, 5000);
-            document.getElementById("success-message").innerText =
-                response.message;
+            successMessage.innerText = response.message;
             dialog.showModal();
         }
     });
@@ -42,7 +44,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         );
         if (isConfirmed) {
             document.getElementById("stop").style.display = "none";
-            document.getElementById("loading").style.display = "block";
+            loading.style.display = "block";
 
             const response = await stopServer();
 
@@ -51,10 +53,8 @@ window.addEventListener("DOMContentLoaded", async () => {
             } else {
                 setTimeout(async () => {
                     await showStatus();
-                    document.getElementById("loading").style.display = "none";
                 }, 5000);
-                document.getElementById("success-message").innerText =
-                    response.message;
+                successMessage.innerText = response.message;
                 dialog.showModal();
             }
         }
