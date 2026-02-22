@@ -1,5 +1,4 @@
 from .minecraft_layer import (
-    get_instance_statuses,
     get_target_instances,
     get_server_status,
     start_server,
@@ -9,7 +8,6 @@ from .minecraft_layer import (
 )
 
 __all__ = [
-    "get_instance_statuses",
     "get_target_instances",
     "get_server_status",
     "start_server",

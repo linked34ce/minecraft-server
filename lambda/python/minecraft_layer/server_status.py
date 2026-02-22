@@ -1,14 +1,10 @@
-from .shared import (
-    PARAMATER_NAMES,
-    ec2,
-    ssm,
-)
+from .shared import PARAMATER_NAMES, ec2, ssm
 from .logger import show_error_log
 from .models import FuncResult
 from .utils import is_running
 
 
-def get_instance_statuses() -> FuncResult:
+def _get_instance_statuses() -> FuncResult:
     """
     Gets the statuses of EC2 instances running on the AWS environment.
 
@@ -35,23 +31,28 @@ def get_instance_statuses() -> FuncResult:
     return FuncResult(is_successful=True, data={"instances": instances})
 
 
-def get_target_instances(instances: FuncResult) -> FuncResult:
+def get_target_instances() -> FuncResult:
     """
     Gets a list of instances a Minecraft service is running on.
     It is expected that the list has only one instance.
 
     Args:
-      instances(FuncResult): EC2 instance statuses.
+      None
 
     Returns:
       result(FuncResult): Information about EC2 instances a Minecraft service is running on, or an error repsponse.
 
     """
+    instance_statuses_result = _get_instance_statuses()
+
+    if not instance_statuses_result.is_successful:
+        return instance_statuses_result
+
     try:
         target_instance_id = ssm.get_parameter(
             Name=PARAMATER_NAMES["TARGET_INSTANCE_ID"], WithDecryption=False)["Parameter"]["Value"]
         target_instances = [
-            x for x in instances if x["InstanceId"] == target_instance_id
+            x for x in instance_statuses_result.data["instances"] if x["InstanceId"] == target_instance_id
         ]
     except Exception as e:
         message = f"Failed to get the parameter: '{PARAMATER_NAMES['TARGET_INSTANCE_ID']}'"
