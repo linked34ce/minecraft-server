@@ -1,8 +1,7 @@
 from botocore.exceptions import ClientError
 
-from .logger import show_error_log, show_success_log
 from .models import FuncResult
-from .shared import ec2
+from .shared import ec2, logger
 from .utils import is_running
 
 
@@ -41,7 +40,7 @@ def start_server(target_instances_result: FuncResult) -> FuncResult:
                 })
         except Exception as e:
             message = "Failed to start the Minecraft server."
-            show_error_log(e, message)
+            logger.error(e, message)
             return FuncResult(
                 is_successful=False,
                 response={
@@ -78,7 +77,7 @@ def stop_server(target_instances_result) -> FuncResult:
                 ])
         except Exception as e:
             message = "Failed to stop the Minecraft server."
-            show_error_log(e, message)
+            logger.error(e, message)
             return FuncResult(
                 is_successful=False,
                 response={
@@ -121,9 +120,9 @@ def automatically_stop_server(target_instances_result) -> None:
                 InstanceIds=[
                     target_instances_result.data["target_instance_id"]
                 ])
-            show_success_log("Successfully stopped the Minecraft server.")
+            logger.success("Successfully stopped the Minecraft server.")
         else:
-            show_success_log(
+            logger.success(
                 "The Minecraft server is not started. There is nothing to do.")
     except Exception as e:
-        show_error_log(e, "Failed to stop the Minecraft server.")
+        logger.error(e, "Failed to stop the Minecraft server.")

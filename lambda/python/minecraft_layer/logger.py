@@ -1,28 +1,36 @@
-def show_error_log(err: Exception, message: str) -> None:
+from typing import Self
+
+
+class Logger():
     """
-    Outputs an error log.
-
-    Args:
-      err(Exception): An error to show its log.
-      message(str): A message about the error.
-
-    Returns:
-      None
+    Manages logging processes.
 
     """
-    print(message)
-    print(f"{err.__class__.__name__}: {err}")
 
+    def success(self: Self, message: str) -> None:
+        """
+        Outputs a success log.
 
-def show_success_log(message: str) -> None:
-    """
-    Outputs a success log.
+        Args:
+          message(str): A success message.
 
-    Args:
-      message(str): A success message.
+        Returns:
+          None
 
-    Returns:
-      None
+        """
+        print(message)
 
-    """
-    print(message)
+    def error(self: Self, err: Exception, message: str) -> None:
+        """
+        Outputs an error log.
+
+        Args:
+          err(Exception): An error to show its log.
+          message(str): A message about the error.
+
+        Returns:
+          None
+
+        """
+        print(message)
+        print(f"{err.__class__.__name__}: {err}")

@@ -1,5 +1,4 @@
-from .shared import PARAMATER_NAMES, ec2, ssm
-from .logger import show_error_log
+from .shared import PARAMATER_NAMES, ec2, ssm, logger
 from .models import FuncResult
 from .utils import is_running
 
@@ -19,7 +18,7 @@ def _get_instance_statuses() -> FuncResult:
         instances = ec2.describe_instance_status()["InstanceStatuses"]
     except Exception as e:
         message = "Failed to get the instance statuses."
-        show_error_log(e, message)
+        logger.error(e, message)
         return FuncResult(
             is_successful=False,
             response={
@@ -56,7 +55,7 @@ def get_target_instances() -> FuncResult:
         ]
     except Exception as e:
         message = f"Failed to get the parameter: '{PARAMATER_NAMES['TARGET_INSTANCE_ID']}'"
-        show_error_log(e, message)
+        logger.error(e, message)
         return FuncResult(
             is_successful=False,
             response={
