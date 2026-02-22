@@ -41,12 +41,6 @@ window.addEventListener("DOMContentLoaded", async () => {
             "Are you sure to stop the Minecraft server?",
         );
         if (isConfirmed) {
-            // window.open(
-            //     "https://o2errkg3cnzogurvtxqn3addre0nwxsy.lambda-url.us-east-1.on.aws/",
-            // );
-            // setTimeout(() => {
-            //     location.reload();
-            // }, 5000);
             document.getElementById("stop").style.display = "none";
             document.getElementById("loading").style.display = "block";
 

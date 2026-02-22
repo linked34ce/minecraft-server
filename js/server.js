@@ -12,20 +12,31 @@ export const showStatus = async () => {
     if (response.statusCode !== 200) {
         showError(response);
     } else {
-        document.getElementById("status").innerHTML = response.isRunning
-            ? "&#x1F7E2; Running"
-            : "&#x1F534; Stopped";
+        const serverStatus = response.serverStatus;
+        const statusArea = document.getElementById("status");
+        const ipAddressInput = document.getElementById("ip-address");
+        const copyButton = document.getElementById("copy");
 
-        const buttonIdToDisplay = response.isRunning ? "stop" : "start";
-        const buttonIdToHide = response.isRunning ? "start" : "stop";
+        let buttonIdToDisplay;
+
+        if (serverStatus.isRunning && serverStatus.ipAddress) {
+            statusArea.innerHTML = "&#x1F7E2; Running";
+            buttonIdToDisplay = "stop";
+            ipAddressInput.value = serverStatus.ipAddress;
+            copyButton.disabled = false;
+        } else {
+            statusArea.innerHTML = "&#x1F534; Stopped";
+            buttonIdToDisplay = "start";
+            ipAddressInput.value = "-";
+            copyButton.disabled = true;
+        }
+
+        const buttonIdToHide = buttonIdToDisplay == "stop" ? "start" : "stop";
         document.getElementById(buttonIdToDisplay).style.display = "block";
         document.getElementById(buttonIdToHide).style.display = "none";
 
-        document.getElementById("ip-address").value =
-            response.isRunning && response.ipAddress ? response.ipAddress : "-";
-
         document.getElementById("copy").addEventListener("click", () => {
-            navigator.clipboard.writeText(response.ipAddress).then(() => {
+            navigator.clipboard.writeText(serverStatus.ipAddress).then(() => {
                 document.getElementById("copy").innerText = "Copied!!";
             });
         });
