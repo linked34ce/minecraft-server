@@ -19,6 +19,8 @@ export const showStatus = async () => {
 
         let buttonIdToDisplay;
 
+        copyButton.innerText = "Copy";
+
         if (serverStatus.isRunning && serverStatus.ipAddress) {
             statusArea.innerHTML = "&#x1F7E2; Running";
             buttonIdToDisplay = "stop";
@@ -39,9 +41,9 @@ export const showStatus = async () => {
 
         document.getElementById("loading").style.display = "none";
 
-        document.getElementById("copy").addEventListener("click", () => {
+        copyButton.addEventListener("click", () => {
             navigator.clipboard.writeText(serverStatus.ipAddress).then(() => {
-                document.getElementById("copy").innerText = "Copied!!";
+                copyButton.innerText = "Copied!!";
             });
         });
     }
