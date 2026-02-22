@@ -95,6 +95,8 @@ def get_server_status(target_instances_result) -> FuncResult:
         response={
             "statusCode": 200,
             "status": "success",
-            "isRunning": is_running(target_instances_result),
-            "ipAddress": target_instance.get("PublicIpAddress"),
+            "serverStatus": {
+                "isRunning": is_running(target_instances_result),
+                "ipAddress": target_instance.get("PublicIpAddress"),
+            }
         })

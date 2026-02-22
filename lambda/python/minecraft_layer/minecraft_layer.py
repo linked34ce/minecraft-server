@@ -1,5 +1,5 @@
 from .logger import Logger
-from .models import MinecraftApiResponse
+from .models import MinecraftApiResponse, MinecraftServerStatus, FuncResult
 from .server_control import automatically_stop_server, start_server, stop_server
 from .server_status import get_server_status, get_target_instances
 from .shared import PARAMATER_NAMES, REGION_NAME, ec2, ssm, logger
@@ -10,6 +10,8 @@ __all__ = [
     "REGION_NAME",
     "Logger",
     "MinecraftApiResponse",
+    "MinecraftServerStatus",
+    "FuncResult",
     "ssm",
     "ec2",
     "logger",
