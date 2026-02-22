@@ -1,5 +1,3 @@
-from typing import Optional
-
 from boto3 import client
 from botocore.exceptions import ClientError
 
@@ -10,8 +8,10 @@ PARAMATER_NAMES = {
     "TARGET_INSTANCE_ID": "/minecraft-server/target-instance-id",
 }
 
-ssm = client("ssm")
-ec2 = client("ec2")
+REGION_NAME = "us-east-1"
+
+ssm = client("ssm", region_name=REGION_NAME)
+ec2 = client("ec2", region_name=REGION_NAME)
 
 
 def show_error_log(err: Exception, message: str) -> None:
@@ -30,6 +30,20 @@ def show_error_log(err: Exception, message: str) -> None:
     print(f"{err.__class__.__name__}: {err}")
 
 
+def show_success_log(message):
+    """
+    Outputs a success log.
+
+    Args:
+      message(str): A success message.
+
+    Returns:
+      None
+
+    """
+    print(message)
+
+
 def get_instance_statuses() -> FuncResult:
     """
     Gets the statuses of EC2 instances running on the AWS environment.
@@ -38,7 +52,7 @@ def get_instance_statuses() -> FuncResult:
       None
 
     Returns:
-      result(FuncResult): instance statuses or an error repsponse.
+      result(FuncResult): EC2 instance statuses or an error repsponse.
 
     """
     try:
@@ -57,13 +71,13 @@ def get_instance_statuses() -> FuncResult:
     return FuncResult(is_successful=True, data={"instances": instances})
 
 
-def get_target_instances(instances) -> FuncResult:
+def get_target_instances(instances: FuncResult) -> FuncResult:
     """
     Gets a list of instances a Minecraft service is running on.
     It is expected that the list has only one instance.
 
     Args:
-      None
+      instances(FuncResult): EC2 instance statuses.
 
     Returns:
       result(FuncResult): Information about EC2 instances a Minecraft service is running on, or an error repsponse.
@@ -94,6 +108,10 @@ def get_target_instances(instances) -> FuncResult:
         })
 
 
+def is_running(target_instances_result: FuncResult) -> bool:
+    return len(target_instances_result.data["target_instances"]) == 1
+
+
 def get_server_status(target_instances_result) -> FuncResult:
     """
     Gets the status of the Minecraft server.
@@ -105,25 +123,24 @@ def get_server_status(target_instances_result) -> FuncResult:
       result(FuncResult): A status of the Minecraft server or an error repsponse.
 
     """
-    is_running = len(target_instances_result.data["target_instances"]) == 1
-
     reservations = ec2.describe_instances()["Reservations"]
     target_instance = [
         i for r in reservations
         for i in r["Instances"]
         if i["InstanceId"] == target_instances_result.data["target_instance_id"]
     ][0]
-    ip_address = target_instance.get("PublicIpAddress")
 
     return FuncResult(
         is_successful=True,
-        data={
-            "is_running": is_running,
-            "ip_address": ip_address,
+        response={
+            "statusCode": 200,
+            "status": "success",
+            "isRunning": is_running(target_instances_result),
+            "ipAddress": target_instance.get("PublicIpAddress"),
         })
 
 
-def start_server(target_instances_result) -> Optional[FuncResult]:
+def start_server(target_instances_result: FuncResult) -> FuncResult:
     """
     Starts the Minecraft server.
 
@@ -134,7 +151,7 @@ def start_server(target_instances_result) -> Optional[FuncResult]:
       result(FuncResult): A successful response or an error repsponse.
 
     """
-    if len(target_instances_result.data["target_instances"]) == 1:
+    if is_running(target_instances_result):
         return FuncResult(
             is_successful=True,
             response={
@@ -145,7 +162,9 @@ def start_server(target_instances_result) -> Optional[FuncResult]:
     else:
         try:
             ec2.start_instances(
-                InstanceIds=[target_instances_result.data["target_instance_id"]])
+                InstanceIds=[
+                    target_instances_result.data["target_instance_id"]
+                ])
         except ClientError as e:
             return FuncResult(
                 is_successful=True,
@@ -164,3 +183,81 @@ def start_server(target_instances_result) -> Optional[FuncResult]:
                     "status": "error",
                     "message": message,
                 })
+
+    return FuncResult(
+        is_successful=True,
+        response={
+            "statusCode": 200,
+            "status": "success",
+            "message": "Successfully started the Minecraft server.",
+        })
+
+
+def stop_server(target_instances_result) -> FuncResult:
+    """
+    Stops the Minecraft server.
+
+    Args:
+      target_instances_result(FuncResult): Information about EC2 instances a Minecraft service is running on.
+
+    Returns:
+      result(FuncResult): A successful response or an error repsponse.
+
+    """
+    if is_running(target_instances_result):
+        try:
+            ec2.stop_instances(
+                InstanceIds=[
+                    target_instances_result.data["target_instance_id"]
+                ])
+        except Exception as e:
+            message = "Failed to stop the Minecraft server."
+            show_error_log(e, message)
+            return FuncResult(
+                is_successful=False,
+                response={
+                    "statusCode": 500,
+                    "status": "error",
+                    "message": message,
+                })
+    else:
+        return FuncResult(
+            is_successful=True,
+            response={
+                "statusCode": 200,
+                "status": "success",
+                "message": "The Minecraft server has already been stopped.",
+            })
+
+    return FuncResult(
+        is_successful=True,
+        response={
+            "statusCode": 200,
+            "status": "success",
+            "message": "Successfully stopped the Minecraft server.",
+        })
+
+
+def automatically_stop_server(target_instances_result) -> None:
+    """
+    Automatically stops the Minecraft server.
+
+    Args:
+      target_instances_result(FuncResult): Information about EC2 instances a Minecraft service is running on.
+
+    Returns:
+      None
+
+    """
+    try:
+        if is_running(target_instances_result):
+            ec2.stop_instances(
+                InstanceIds=[
+                    target_instances_result.data["target_instance_id"]
+                ])
+            show_success_log("Successfully stopped the Minecraft server.")
+        else:
+            show_success_log(
+                "The Minecraft server is not started. There is nothing to do.")
+    except Exception as e:
+        show_error_log(e, "Failed to stop the Minecraft server.")
